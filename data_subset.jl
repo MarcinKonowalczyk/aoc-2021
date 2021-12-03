@@ -26,7 +26,7 @@ for f in full_data_dir_content
         lines = open(joinpath(full_data_dir, f), "r") do io
             return [readline(io) for _ in 1:100]
         end
-        print("writng ./data/" * f * "\n")
+        println("writng ./data/" * f)
         open(joinpath(data_dir, f), "w") do io
             for l in lines[1:end-1]
                 write(io, l*"\n")
@@ -34,7 +34,7 @@ for f in full_data_dir_content
             write(io, lines[end])
         end
     else
-        print("./data/" * f * " already exists \n")
+        println("./data/" * f * " already exists")
     end
 end
 

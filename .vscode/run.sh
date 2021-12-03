@@ -53,4 +53,6 @@ fi
 
 if [ "$EXTENSION" = "jl" ]; then
     julia "$FILE"
+elif [ "$EXTENSION" = "js" ]; then
+    node "$FILE"
 fi

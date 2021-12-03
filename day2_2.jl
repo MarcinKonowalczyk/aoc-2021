@@ -21,5 +21,6 @@ for (com, x) in zip(C, X)
     end
 end
 
-print("position = ", position, " | depth = ", depth, " | aim = ", aim, '\n')
-print("position x depth = ", position * depth, '\n')
+position_x_depth = position * depth
+@show position, depth
+@show position_x_depth

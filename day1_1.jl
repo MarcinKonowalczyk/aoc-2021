@@ -5,4 +5,4 @@ data_file = "./data/day1_input.txt"
 data = readdlm(data_file, '\n', Int)[:]
 
 increases = sum(diff(data).>0)
-print(increases)
+@show increases

@@ -1,7 +1,7 @@
 using DelimitedFiles
 
-# data_file = "./data/day3_input.txt"
-data_file = "./data_full/day3_input.txt"
+data_file = "./data/day3_input.txt"
+# data_file = "./data_full/day3_input.txt"
 data = readdlm(data_file, String)
 
 B = zeros(Bool, size(data,1), length(data[1]))

@@ -55,4 +55,7 @@ if [ "$EXTENSION" = "jl" ]; then
     julia "$FILE"
 elif [ "$EXTENSION" = "js" ]; then
     node "$FILE"
+elif [ "$EXTENSION" = "java" ]; then
+    JAVAC_ARGS="-Xdiags:verbose -Xmaxerrs 1"
+    javac "$FILE" $JAVAC_ARGS && java "${FILENAME%.*}" && rm "${FILENAME%.*}.class"
 fi

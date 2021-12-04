@@ -25,3 +25,4 @@ power_consumption = gamma * epsilon
 
 @show gamma, epsilon
 @show power_consumption
+answer = power_consumption

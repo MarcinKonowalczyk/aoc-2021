@@ -30,3 +30,4 @@ life_support_rating = oxygen_rating * co2_rating
 
 @show oxygen_rating, co2_rating
 @show life_support_rating
+answer = life_support_rating

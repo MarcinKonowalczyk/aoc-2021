@@ -24,3 +24,4 @@ end
 position_x_depth = position * depth
 @show position, depth
 @show position_x_depth
+answer = position_x_depth

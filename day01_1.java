@@ -7,8 +7,8 @@ public class day01_1 {
     public static void main(String args[]) {
         List<Integer> depths = null;
         try {
-            // depths = load("data_full/day01_input.txt");
-            depths = load("data/day01_input.txt");
+            // depths = load("data/full/day01_input.txt");
+            depths = load("data/reduced/day01_input.txt");
         } catch (IOException e) {
             e.printStackTrace();
             System.exit(1);

@@ -6,19 +6,19 @@ if split(root,'/')[end] != "aoc-2021"
     error("run this script from the project root folder")
 end
 
-function switch_data_source!(source::Vector{String}, day_string::String, folder::String, safe=true)
+function switch_data_source!(source::Vector{String}, day_string::String, subfolder::String, safe=true)
     """Switch the data folder in the source file"""
     for i in 1:length(source)
         line = source[i]
         if !occursin(r"\s*#.*", line)
-            m = match(r"(?'other_pre'.*)\"(?'string_pre'\.\/)(?'folder'.*)\/day" * day_string * r"_input.txt\"(?'other_post'.*)", line)
+            m = match(r"(?'other_pre'.*)\"(?'string_pre'\.\/)(?'folder'.*)\/(?'subfolder'.*)\/day" * day_string * r"_input.txt\"(?'other_post'.*)", line)
             if (m !== nothing)
                 if safe
                     # Try to reconstruct the source line to make sure the regex matches well
-                    reconstructed_line = m["other_pre"] * "\"" * m["string_pre"] * m["folder"] * "/day" * day_string * "_input.txt\"" * m["other_post"] * "\n"
+                    reconstructed_line = m["other_pre"] * "\"" * m["string_pre"] * m["folder"] * "/" * m["subfolder"] * "/day" * day_string * "_input.txt\"" * m["other_post"] * "\n"
                     @assert line == reconstructed_line "line was not reconstructed correctly by the script parser"
                 end
-                source[i] = m["other_pre"] * "\"" * m["string_pre"] * folder * "/day" * day_string * "_input.txt\"" * m["other_post"] * "\n"
+                source[i] = m["other_pre"] * "\"" * m["string_pre"] * m["folder"] * "/" * subfolder * "/day" * day_string * "_input.txt\"" * m["other_post"] * "\n"
             end
         end
     end
@@ -87,11 +87,11 @@ for f in readdir(root)
         begin_end!(source)
 
         println("running $f with reduced data")
-        switch_data_source!(source, day_string, "data")
+        switch_data_source!(source, day_string, "reduced")
         answer_reduced = eval_source(source, f)
 
         println("running $f with full data")
-        switch_data_source!(source, day_string, "data_full")
+        switch_data_source!(source, day_string, "full")
         answer_full = eval_source(source, f)
 
         row = [day, part, answer_reduced, answer_full]

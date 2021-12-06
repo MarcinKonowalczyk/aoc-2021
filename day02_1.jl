@@ -1,7 +1,7 @@
 using DelimitedFiles
 
-data_file = "./data/day02_input.txt"
-# data_file = "./data_full/day02_input.txt"
+data_file = "./data/reduced/day02_input.txt"
+# data_file = "./data/full/day02_input.txt"
 data = readdlm(data_file, ' ')
 C = [Char(d[1]) for d in data[:,1]]
 X = Vector{Int}(data[:,2])

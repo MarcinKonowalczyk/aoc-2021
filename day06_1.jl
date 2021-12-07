@@ -6,7 +6,7 @@ data = readdlm(data_file, ',', Int8)
 
 fish = copy(data)[:]
 
-for _ in 1:80
+for _ = 1:80
     fish .-= 1
     local mask = fish .== -1
     fish[mask] .= 6

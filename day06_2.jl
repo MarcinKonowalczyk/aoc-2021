@@ -10,7 +10,7 @@ for fish in data
     fish_buckets[fish+1] += 1
 end
 
-for day in 1:256
+for day = 1:256
     temp_fish_buckets = zeros(UInt64, 9)
     for (bucket_number, bucket) in enumerate(fish_buckets)
         if bucket_number == 1

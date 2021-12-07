@@ -2,23 +2,55 @@
 
 # check that we're in the project root
 root = pwd()
-if split(root,'/')[end] != "aoc-2021"
+if split(root, '/')[end] != "aoc-2021"
     error("run this script from the project root folder")
 end
 
-function switch_data_source!(source::Vector{String}, day_string::String, subfolder::String, safe=true)
+function switch_data_source!(
+    source::Vector{String},
+    day_string::String,
+    subfolder::String,
+    safe = true,
+)
     """Switch the data folder in the source file"""
-    for i in 1:length(source)
+    for i = 1:length(source)
         line = source[i]
         if !occursin(r"\s*#.*", line)
-            m = match(r"(?'other_pre'.*)\"(?'string_pre'\.\/)(?'folder'.*)\/(?'subfolder'.*)\/day" * day_string * r"_input.txt\"(?'other_post'.*)", line)
+            m = match(
+                r"(?'other_pre'.*)\"(?'string_pre'\.\/)(?'folder'.*)\/(?'subfolder'.*)\/day" *
+                day_string *
+                r"_input.txt\"(?'other_post'.*)",
+                line,
+            )
             if (m !== nothing)
                 if safe
                     # Try to reconstruct the source line to make sure the regex matches well
-                    reconstructed_line = m["other_pre"] * "\"" * m["string_pre"] * m["folder"] * "/" * m["subfolder"] * "/day" * day_string * "_input.txt\"" * m["other_post"] * "\n"
+                    reconstructed_line =
+                        m["other_pre"] *
+                        "\"" *
+                        m["string_pre"] *
+                        m["folder"] *
+                        "/" *
+                        m["subfolder"] *
+                        "/day" *
+                        day_string *
+                        "_input.txt\"" *
+                        m["other_post"] *
+                        "\n"
                     @assert line == reconstructed_line "line was not reconstructed correctly by the script parser"
                 end
-                source[i] = m["other_pre"] * "\"" * m["string_pre"] * m["folder"] * "/" * subfolder * "/day" * day_string * "_input.txt\"" * m["other_post"] * "\n"
+                source[i] =
+                    m["other_pre"] *
+                    "\"" *
+                    m["string_pre"] *
+                    m["folder"] *
+                    "/" *
+                    subfolder *
+                    "/day" *
+                    day_string *
+                    "_input.txt\"" *
+                    m["other_post"] *
+                    "\n"
             end
         end
     end
@@ -27,7 +59,7 @@ end
 function global_answer!(source::Vector{String}, f::String)
     """Add "global' before answer in the script body"""
     found = false
-    for i in 0:(length(source)-1)
+    for i = 0:(length(source)-1)
         if occursin(r"answer\s?=.+", source[end-i])
             source[end-i] = "global " * source[end-i]
             found = true
@@ -51,7 +83,7 @@ function begin_end!(source)
 end
 
 function comment_prints!(source)
-    for i in 1:length(source)
+    for i = 1:length(source)
         line = source[i]
         m = match(r".*(print|println|@show).*", line)
         if (m !== nothing)
@@ -78,7 +110,7 @@ for f in readdir(root)
         day_string = String(m["day"])
         day, part = parse(Int, m["day"]), parse(Int, m["part"])
         source = open(f, "r") do io
-            return readlines(io, keep=true)
+            return readlines(io, keep = true)
             # return read
         end
 

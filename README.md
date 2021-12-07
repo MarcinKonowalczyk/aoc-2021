@@ -1,5 +1,7 @@
 # aoc-2021
 
+<!-- <a href="#badge"><img alt="code style: prettier" src="https://img.shields.io/badge/code_style-prettier-ff69b4.svg?style=flat-square"></a> -->
+
 [Advent of code 2021](https://adventofcode.com/2021) solutions.
 
 The theme is to try to solve the challenges in Julia, and then in as many other programming languages starting with letter J.
@@ -7,12 +9,14 @@ The theme is to try to solve the challenges in Julia, and then in as many other 
 ## Julia
 
 ```bash
+julia -e 'using JuliaFormatter; format(".")'
 julia <filename>.jl
 ```
 
 ## Javascript
 
 ```bash
+npx prettier --write .
 node <filename>.js
 ```
 
@@ -25,7 +29,7 @@ javac <filename>.java && java <filename> && rm <filename>.class
 ## Answers
 
 | day.part | test        | 100          | full          |
-|----------|-------------|--------------|---------------|
+| -------- | ----------- | ------------ | ------------- |
 | 01.1     | 7           | 53           | 1154          |
 | 01.2     | 5           | 55           | 1127          |
 | 02.1     | 150         | 14550        | 1728414       |

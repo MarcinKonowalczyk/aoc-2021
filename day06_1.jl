@@ -2,7 +2,7 @@ using DelimitedFiles
 
 data_file = "./data/reduced/day06_input.txt"
 # data_file = "./data/full/day06_input.txt"
-data = readdlm(data_file, ',', Int8)
+data = readdlm(data_file, '\n', Int8)
 
 fish = copy(data)[:]
 

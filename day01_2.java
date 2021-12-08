@@ -28,10 +28,6 @@ public class day01_2 {
     return out;
   }
 
-  // private static <T> Stream<List<T>> windowed_stream(List<T> list, Integer n) {
-
-  // }
-
   private static List<Integer> load(String filename) {
     List<Integer> depths = new ArrayList<Integer>();
     try {

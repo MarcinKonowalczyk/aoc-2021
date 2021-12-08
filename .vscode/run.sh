@@ -51,6 +51,8 @@ fi
 
 ##################################################
 
+# echo "s/^/\/Volumes\/Extended\/GitLab\/aoc-2021/"
+
 if [ "$EXTENSION" = "jl" ]; then
     julia "$FILE"
 elif [ "$EXTENSION" = "js" ]; then
@@ -58,4 +60,9 @@ elif [ "$EXTENSION" = "js" ]; then
 elif [ "$EXTENSION" = "java" ]; then
     JAVAC_ARGS="-Xdiags:verbose -Xmaxerrs 1"
     javac "$FILE" $JAVAC_ARGS && java "${FILENAME%.*}" && rm "${FILENAME%.*}.class"
+elif [ "$EXTENSION" = "jelly" ]; then
+    # cat "$FILENAME" | head -n1 | sed -r 's/(“\.?\/?|»)//g' | sed "s/^/${ROOT//\//\\/}\//" | xargs cat | jelly fu "$FILENAME"
+    DATA=$(cat "$FILENAME" | head -n1 | sed -r 's/(“\.?\/?|»)//g' | sed "s/^/${ROOT//\//\\/}\//") # get data filename fron the file ( firt line of teh input)
+    LINES=$(cat $DATA | wc -l); LINES=$((LINES+1)); # get lines count of the data file
+    cat "$DATA" | jelly fu "$FILENAME" "$LINES" # pass the content of the file as stdin and the number of lines as argv3 to the jelly script
 fi

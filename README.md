@@ -10,21 +10,29 @@ The theme is to try to solve the challenges in Julia, and then in as many other 
 
 ```bash
 julia -e 'using JuliaFormatter; format(".")'
-julia <filename>.jl
+julia $FILENAME.jl
 ```
 
 ## Javascript
 
 ```bash
 npx prettier --write .
-node <filename>.js
+node $FILENAME.js
 ```
 
 ## Java
 
 ```bash
 find . -regex '.*\.java$' | xargs -L1 google-java-format -i
-javac <filename>.java && java <filename> && rm <filename>.class
+javac $FILENAME.java && java $FILENAME && rm $FILENAME.class
+```
+
+## Jelly
+
+
+```bash
+cat "$DATA" | jelly fu "$FILENAME"
+cat "$FILENAME" | head -n1 | sed -r 's/(“\.?\/?|»)//g' | sed "s/^/${ROOT//\//\\/}\//" | xargs cat | jelly fu "$FILENAME"
 ```
 
 ## Answers

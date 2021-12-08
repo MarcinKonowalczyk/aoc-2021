@@ -23,6 +23,7 @@ node <filename>.js
 ## Java
 
 ```bash
+find . -regex '.*\.java$' | xargs -L1 google-java-format -i
 javac <filename>.java && java <filename> && rm <filename>.class
 ```
 

@@ -1,7 +1,7 @@
 using DelimitedFiles
 
-# data_file = "./data/test/day08_input.txt"
-data_file = "./data/full/day08_input.txt"
+data_file = "./data/reduced/day08_input.txt"
+# data_file = "./data/full/day08_input.txt"
 data = readdlm(data_file, ' ', String)
 
 inputs = data[:, 1:10]
@@ -14,7 +14,7 @@ function kthperm(n::Integer, k::Integer)
     f = factorial(oftype(k, n))
     0 < k <= f || throw(ArgumentError("permutation k must satisfy 0 < k ≤ $f, got $k"))
     k -= 1 # make k 1-indexed
-    for i=1:n-1
+    for i = 1:n-1
         f ÷= n - i + 1
         j = k ÷ f
         k -= j * f
@@ -25,14 +25,14 @@ function kthperm(n::Integer, k::Integer)
         end
         a[i] = elt
     end
-    a
+    return a
 end
 
 target = ["abcefg", "cf", "acdeg", "acdfg", "bcdf", "abdfg", "abdefg", "acf", "abcdefg", "abcdfg"]
 sorted_target = sort(target)
 wire_labels = collect("abcdefg")
 
-translate(perm, digit) = join(sort([wire_labels[wire_labels[perm] .== d][1] for d in digit]))
+translate(perm, digit) = join(sort([wire_labels[findfirst(wire_labels[perm] .== d)] for d in digit]))
 
 N = size(inputs,1)
 translated_outputs = zeros(Int, N)
@@ -49,7 +49,10 @@ for (row_index, (input, output)) in enumerate(zip(eachrow(inputs), eachrow(outpu
         println("$row_index / $N | permutation found: $perm")
     end
 
-    translated_output = sum(10 .^ (3:-1:0) .* [findall(target .== translate(perm, digit))[1]-1 for digit in output])
+    # @show perm
+    # @show output[1]
+    # @show findall(target .== translate(perm, output[1]))
+    translated_output = sum(10 .^ (3:-1:0) .* [findfirst(target .== translate(perm, digit))-1 for digit in output])
     translated_outputs[row_index] = translated_output
 end
 

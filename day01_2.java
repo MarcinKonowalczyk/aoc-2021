@@ -6,7 +6,7 @@ public class day01_2 {
 
   public static void main(String args[]) {
     // List<Integer> depths = load("data/full/day01_input.txt");
-    List<Integer> depths = load("data/reduced/day01_input.txt");
+    List<Integer> depths = load("data/test/day01_input.txt");
     long increases =
         windowed(
                 windowed(depths, 3).stream()

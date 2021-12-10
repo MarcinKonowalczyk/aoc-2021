@@ -1,6 +1,6 @@
 using DelimitedFiles
 
-data_file = "./data/reduced/day04_input.txt"
+data_file = "./data/test/day04_input.txt"
 # data_file = "./data/full/day04_input.txt"
 data = readdlm(data_file, String)
 

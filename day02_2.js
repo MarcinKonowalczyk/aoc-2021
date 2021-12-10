@@ -1,7 +1,7 @@
 const fs = require("fs");
 
 // data_file = "./data/full/day02_input.txt";
-data_file = "data/reduced/day02_input.txt"
+data_file = "data/test/day02_input.txt"
 const data = fs.readFileSync(data_file, "utf8").split("\n");
 
 const directions = data

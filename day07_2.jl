@@ -1,6 +1,6 @@
 using DelimitedFiles
 
-data_file = "./data/reduced/day07_input.txt"
+data_file = "./data/test/day07_input.txt"
 # data_file = "./data/full/day07_input.txt"
 data = readdlm(data_file, '\n', Int16)
 

@@ -1,7 +1,7 @@
 const fs = require("fs");
 
 // data_file = "./data/full/day01_input.txt"
-data_file = "data/reduced/day01_input.txt";
+data_file = "data/test/day01_input.txt";
 const data = fs.readFileSync(data_file, "utf8");
 const depths = data.split("\n").map((item) => parseInt(item, 10));
 // console.log("depths = ", depths)

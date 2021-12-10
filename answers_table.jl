@@ -119,7 +119,7 @@ for f in readdir(root)
         begin_end!(source)
 
         println("--- $f ---")
-        println("test data ...")
+        println(" test data ...")
         switch_data_source!(source, day_string, "test")
         answer_test = eval_source(source, f)
 
@@ -127,10 +127,11 @@ for f in readdir(root)
         # switch_data_source!(source, day_string, "reduced")
         # answer_reduced = eval_source(source, f)
 
-        println("full data ...")
+        println(" full data ...")
         switch_data_source!(source, day_string, "full")
         answer_full = eval_source(source, f)
 
+        println("")
         row = [day, part, answer_test, answer_full]
         global answers = vcat(answers, row')
     end

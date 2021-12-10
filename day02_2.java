@@ -5,7 +5,7 @@ public class day02_2 {
 
   public static void main(String args[]) {
     // List<String> data = load("data/full/day02_input.txt");
-    List<String> data = load("data/reduced/day02_input.txt");
+    List<String> data = load("data/test/day02_input.txt");
     int N = data.size();
 
     String[] commands = new String[N];

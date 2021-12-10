@@ -13,6 +13,6 @@ unit_indices = findall(segment_frequencies .== 1)
 unique_digits = unit_indices .- 1
 unique_digit_segments = sort(digit_segments[unit_indices])
 
-unique_digits_in_output = sum(map(x->x in unique_digit_segments, length.(output)))
+unique_digits_in_output = sum(map(x -> x in unique_digit_segments, length.(output)))
 @show unique_digits_in_output
 answer = unique_digits_in_output

@@ -32,17 +32,29 @@ function kthperm(n::Integer, k::Integer)
     return a
 end
 
-target = ["abcefg", "cf", "acdeg", "acdfg", "bcdf", "abdfg", "abdefg", "acf", "abcdefg", "abcdfg"]
+target = [
+    "abcefg",
+    "cf",
+    "acdeg",
+    "acdfg",
+    "bcdf",
+    "abdfg",
+    "abdefg",
+    "acf",
+    "abcdefg",
+    "abcdfg",
+]
 sorted_target = sort(target)
 wire_labels = collect("abcdefg")
 
-translate(perm, digit) = join(sort([wire_labels[findfirst(wire_labels[perm] .== d)] for d in digit]))
+translate(perm, digit) =
+    join(sort([wire_labels[findfirst(wire_labels[perm] .== d)] for d in digit]))
 
-N = size(inputs,1)
+N = size(inputs, 1)
 translated_outputs = zeros(Int, N)
 for (row_index, (input, output)) in enumerate(zip(eachrow(inputs), eachrow(outputs)))
     perm = undef
-    for k in 1:factorial(7)
+    for k = 1:factorial(7)
         perm = kthperm(7, k)
         translated_input = sort([translate(perm, digit) for digit in input])
         translated_input == sorted_target && break
@@ -56,7 +68,10 @@ for (row_index, (input, output)) in enumerate(zip(eachrow(inputs), eachrow(outpu
     # @show perm
     # @show output[1]
     # @show findall(target .== translate(perm, output[1]))
-    translated_output = sum(10 .^ (3:-1:0) .* [findfirst(target .== translate(perm, digit))-1 for digit in output])
+    translated_output = sum(
+        10 .^ (3:-1:0) .*
+        [findfirst(target .== translate(perm, digit)) - 1 for digit in output],
+    )
     translated_outputs[row_index] = translated_output
 end
 
@@ -66,4 +81,3 @@ sum_of_outputs = sum(translated_outputs)
 @show sum_of_outputs
 
 answer = sum_of_outputs
-

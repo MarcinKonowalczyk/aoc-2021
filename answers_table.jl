@@ -103,7 +103,7 @@ function eval_source(source, f)
     end
 end
 
-answers = Matrix{Int64}(undef, 0, 5)
+answers = Matrix{Int64}(undef, 0, 4)
 for f in readdir(root)
     m = match(r"(?>\.\/)?day(?'day'\d{2})_(?'part'[1|2])\.jl", f)
     if (m !== nothing)
@@ -118,19 +118,20 @@ for f in readdir(root)
         global_answer!(source, f)
         begin_end!(source)
 
-        println("running $f with test data")
+        println("--- $f ---")
+        println("test data ...")
         switch_data_source!(source, day_string, "test")
         answer_test = eval_source(source, f)
 
-        println("running $f with reduced data")
-        switch_data_source!(source, day_string, "reduced")
-        answer_reduced = eval_source(source, f)
+        # println("running $f with reduced data")
+        # switch_data_source!(source, day_string, "reduced")
+        # answer_reduced = eval_source(source, f)
 
-        println("running $f with full data")
+        println("full data ...")
         switch_data_source!(source, day_string, "full")
         answer_full = eval_source(source, f)
 
-        row = [day, part, answer_test, answer_reduced, answer_full]
+        row = [day, part, answer_test, answer_full]
         global answers = vcat(answers, row')
     end
 end

@@ -8,6 +8,10 @@ inputs = data[:, 1:10]
 outputs = data[:, 12:end]
 
 # copied and slightly adjusted, from https://github.com/JuliaMath/Combinatorics.jl
+# TODO: this can be done some much more efficiently!
+#       this is O(k*n^2) (is it??) and can be easilly O(n). 
+#       write and PR to Combinatorics.jl
+# TODO: fix certain numbers by the digit 4 and 7 (simplest), can reduce 
 function kthperm(n::Integer, k::Integer)
     a = collect(1:n)
     n == 0 && return a

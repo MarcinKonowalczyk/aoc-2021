@@ -7,23 +7,27 @@ data = readdlm(data_file, ' ', String)
 
 N, M = (size(data, 1), length(data[1]))
 
-octopi = zeros(Int, (N+2, M+2))
-for j in 1:N, k in 1:M
+octopi = zeros(Int, (N + 2, M + 2))
+for j = 1:N, k = 1:M
     octopi[j+1, k+1] = parse(Int, data[j][k])
 end
 
 @inline function clip_pad!(octopi)
-    @inbounds octopi[:,1] .= 0
-    @inbounds octopi[:,end] .= 0
-    @inbounds octopi[1,:] .= 0
-    @inbounds octopi[end,:] .= 0
+    @inbounds octopi[:, 1] .= 0
+    @inbounds octopi[:, end] .= 0
+    @inbounds octopi[1, :] .= 0
+    @inbounds octopi[end, :] .= 0
 end
 
 function print_octopi(octopi)
-    for j in 1:N
-        for k in 1:M
+    for j = 1:N
+        for k = 1:M
             octopus = octopi[j+1, k+1]
-            printstyled(octopus; color = octopus == 0 ? :blue : :light_black, bold = (octopus == 0))
+            printstyled(
+                octopus;
+                color = octopus == 0 ? :blue : :light_black,
+                bold = (octopus == 0),
+            )
         end
         print("\n")
     end
@@ -50,7 +54,7 @@ while true
 
     octopi[all_flashes] .= 0
 
-    if sum(all_flashes) == N*M
+    if sum(all_flashes) == N * M
         break
     end
 

@@ -31,7 +31,7 @@ function heappop!(heap::AbstractArray)
     if N > 0
         let x = heap[end]
             # circshift heap forward by one
-            for i in N:-1:2
+            for i = N:-1:2
                 heap[i] = heap[i-1]
             end
             # push the tail of the heap through it to restore the heap property
@@ -51,15 +51,15 @@ end
 
 ###
 
-bracket_maping = Dict{Char, Char}('('=>')', '['=>']', '{'=>'}', '<'=>'>')
-score_maping = Dict{Char, Integer}(')'=>1, ']'=>2, '}'=>3, '>'=>4)
+bracket_maping = Dict{Char,Char}('(' => ')', '[' => ']', '{' => '}', '<' => '>')
+score_maping = Dict{Char,Integer}(')' => 1, ']' => 2, '}' => 3, '>' => 4)
 all_scores = Integer[]::Vector{Integer}
 
 for line in lines
     begin
         expected = Char[]::Vector{Char}
         line_is_valid = true::Bool
-        mismatch = (' ',' ')::Tuple{Char, Char}
+        mismatch = (' ', ' ')::Tuple{Char,Char}
         for token in line
             # @show token
             if token in keys(bracket_maping)
@@ -68,7 +68,7 @@ for line in lines
                 top = pop!(expected)
                 line_is_valid = (top == token)::Bool
                 if !line_is_valid
-                    mismatch = (top, token)::Tuple{Char, Char}
+                    mismatch = (top, token)::Tuple{Char,Char}
                     break
                 end
             else
@@ -79,7 +79,7 @@ for line in lines
     end
 
     if line_is_valid
-        @show join(reverse(expected),"")
+        @show join(reverse(expected), "")
         let score = 0::Int
             for character in reverse(expected)
                 score *= 5
@@ -92,9 +92,9 @@ for line in lines
 end
 
 N = length(all_scores)
-@assert mod(N,2) == 1 "Invliad number of scores (must be odd)"
+@assert mod(N, 2) == 1 "Invliad number of scores (must be odd)"
 
-for _ in 1:floor(N/2)
+for _ = 1:floor(N / 2)
     heappop!(all_scores)
 end
 

@@ -95,6 +95,8 @@ end
 
 function eval_source(source, f)
     global answer = undef
+    # This can throw Base.Meta.ParseError("unexpected \")\"") due to multiline print commenting
+    # DOTO: Deal with ^
     eval(Meta.parse(join(source)))
     if answer === undef
         error("'answer' not defined in $f")

@@ -34,13 +34,8 @@ for line in lines
 
     if !line_is_valid
         line_score = score_maping[mismatch[2]]
-        println(
-            "Expected '" *
-            mismatch[1] *
-            "' but got '" *
-            mismatch[2] *
-            "' for $line_score points!",
-        )
+        a, b = mismatch
+        println("Expected '$a' but got '$b' for $line_score points!")
         global score += line_score
     end
 end

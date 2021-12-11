@@ -1,5 +1,4 @@
 using DelimitedFiles
-using BenchmarkTools
 
 # data_file = "./data/test/day11_input.txt"
 data_file = "./data/full/day11_input.txt"
@@ -23,11 +22,9 @@ function print_octopi(octopi)
     for j = 1:N
         for k = 1:M
             octopus = octopi[j+1, k+1]
-            printstyled(
-                octopus;
-                color = octopus == 0 ? :blue : :light_black,
-                bold = (octopus == 0),
-            )
+            iszero = octopus == 0
+            color = iszero ? :blue : :light_black
+            printstyled(octopus; color = color, bold = iszero)
         end
         print("\n")
     end
@@ -73,6 +70,6 @@ end
 println("After final step $step:")
 print_octopi(octopi)
 
-# @show step
+@show step
 
 answer = step

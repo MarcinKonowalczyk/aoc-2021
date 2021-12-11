@@ -85,7 +85,7 @@ end
 function comment_prints!(source)
     for i = 1:length(source)
         line = source[i]
-        m = match(r".*(print|println|@show).*", line)
+        m = match(r"^\s*(print|println|@show|printstyled).*", line)
         if (m !== nothing)
             source[i] = "# " * line
         end
@@ -115,7 +115,6 @@ for f in readdir(root)
             return readlines(io, keep = true)
             # return read
         end
-
         comment_prints!(source)
         global_answer!(source, f)
         begin_end!(source)

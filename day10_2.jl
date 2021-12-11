@@ -12,73 +12,42 @@ heapleft(i::Integer) = 2i
 heapright(i::Integer) = 2i + 1
 heapparent(i::Integer) = div(i, 2)
 
-function percolate_up!(h::AbstractArray, i::Integer)
-    x = h[i]
-    @inbounds while (j = heapparent(i)) >= 1
-        x < h[j] || break
-        h[i] = h[j]
-        i = j
+@inline function heappush!(heap::AbstractArray, x)
+    push!(heap, x)
+    # pull the tail of the heap through it to restore the heap property
+    position = length(heap)
+    @inbounds while (new_position = heapparent(position)) >= 1
+        x < heap[new_position] || break
+        heap[position] = heap[new_position]
+        position = new_position
     end
-    h[i] = x
+    heap[position] = x
+    return heap
 end
 
-@inline function heappush!(h::AbstractArray, x)
-    push!(h, x)
-    percolate_up!(h, length(h))
-    return h
-end
-
-"""
-    circpop!(v, ord::Ordering=Forward)
-In-place [`heapify`](@ref).
-"""
-@inline function circpop!(xs::AbstractArray)
-    temp = xs[end]
-    for j in length(xs):-1:2
-        xs[j] = xs[j-1]
+function heappop!(heap::AbstractArray)
+    p = popfirst!(heap)
+    N = length(heap)
+    if N > 0
+        let x = heap[end]
+            # circshift heap forward by one
+            for i in N:-1:2
+                heap[i] = heap[i-1]
+            end
+            # push the tail of the heap through it to restore the heap property
+            position = 1
+            @inbounds while (left = heapleft(position)) <= N
+                right = heapright(position)
+                new_position = right > N || (heap[left] < heap[right]) ? left : right
+                heap[new_position] < x || break
+                heap[position] = heap[new_position]
+                position = new_position
+            end
+            heap[position] = x
+        end
     end
-    xs[1] = temp
-    return xs
+    return p
 end
-
-function percolate_down!(xs::AbstractArray, i::Integer)
-    x = xs[i]
-    len::Integer = length(xs)
-    @inbounds while (l = heapleft(i)) <= len
-        r = heapright(i)
-        j = r > len || (xs[l] < xs[r]) ? l : r
-        xs[j] < x || break
-        xs[i] = xs[j]
-        i = j
-    end
-    xs[i] = x
-end
-
-function heappop!(xs::AbstractArray)
-    x = popfirst!(xs)
-    if !isempty(xs)
-        circpop!(xs)
-        percolate_down!(xs, 1)
-    end
-    return x
-end
-
-# function heapify!(xs::AbstractArray)
-#     for i in heapparent(length(xs)):-1:1
-#         percolate_down!(xs, i)
-#     end
-#     return xs
-# end
-
-# function isheap(xs::AbstractArray)
-#     for i in 1:div(length(xs), 2)
-#         if xs[heapleft(i)] < xs[i] ||
-#            (heapright(i) <= length(xs) && xs[heapright(i)] < xs[i])
-#             return false
-#         end
-#     end
-#     return true
-# end
 
 ###
 
@@ -119,9 +88,6 @@ for line in lines
             @show score
             heappush!(all_scores, score)
         end
-        # line_score = score_maping[mismatch[2]]
-        # println("Expected '" * mismatch[1] * "' but got '" * mismatch[2] * "' for $line_score points!")
-        # global score += line_score
     end
 end
 

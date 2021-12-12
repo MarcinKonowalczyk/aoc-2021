@@ -20,7 +20,7 @@ filter(f) = Base.Fix1(filter, f)
 const Cave = String
 
 # build the cave system
-const caves = Dict{Cave, Set{Cave}}([])
+const caves = Dict{Cave,Set{Cave}}([])
 for (cave1, cave2) in eachrow(connections)
     (cave1 in keys(caves)) || (caves[cave1] = Set{Cave}([]))
     (cave2 in keys(caves)) || (caves[cave2] = Set{Cave}([]))
@@ -31,34 +31,27 @@ end
 
 issmall(cave) = islowercase(cave[1])
 
-function all_subpaths(current_cave::Cave, visited::Set{Cave}, double_visit_done::Bool)::Vector{Vector{String}}
+function all_subpaths(
+    current_cave::Cave,
+    visited::Set{Cave},
+    double_visit_done::Bool,
+)::Vector{Vector{String}}
     routes = caves[current_cave] - visited - "start"
-    if current_cave == "end" || isempty(routes)
-        return [[]]
+    (current_cave != "end" && !isempty(routes)) || return [[]]
+
+    # Recursively get all the spossible subpaths
+    subpaths = Set{Vector{String}}([]) # use set to add only unique paths
+    new_visited = issmall(current_cave) ? visited + current_cave : visited
+    for cave in routes, subpath in all_subpaths(cave, new_visited, double_visit_done)
+        push!(subpath, cave)
+        push!(subpaths, subpath)
     end
 
-    subpaths = Set{Vector{String}}([])
-    if issmall(current_cave)
-        for cave in routes
-            for subpath in all_subpaths(cave, visited + current_cave, double_visit_done)
-                push!(subpath, cave)
-                push!(subpaths, subpath)
-            end
-        end
-        if !double_visit_done
-            for cave in routes
-                for subpath in all_subpaths(cave, visited, true)
-                    push!(subpath, cave)
-                    push!(subpaths, subpath)
-                end
-            end
-        end
-    else
-        for cave in routes
-            for subpath in all_subpaths(cave, visited, double_visit_done)
-                push!(subpath, cave)
-                push!(subpaths, subpath)
-            end
+    # Double visit oneself
+    if issmall(current_cave) && !double_visit_done
+        for cave in routes, subpath in all_subpaths(cave, visited, true)
+            push!(subpath, cave)
+            push!(subpaths, subpath)
         end
     end
     return collect(subpaths)
@@ -66,7 +59,7 @@ end
 
 paths_tree = all_subpaths("start", Set{Cave}([]), false)
 
-paths = paths_tree |> filter(x->x[1]=="end") |> map(reverse) |> map(x->x[1:end-1])
+paths = paths_tree |> filter(x -> x[1] == "end") |> map(reverse) |> map(x -> x[1:end-1])
 
 number_of_paths = length(paths)
 
@@ -87,4 +80,3 @@ end
 @show number_of_paths
 
 answer = number_of_paths
-

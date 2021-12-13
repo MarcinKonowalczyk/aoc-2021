@@ -25,32 +25,14 @@ function switch_data_source!(
             if (m !== nothing)
                 if safe
                     # Try to reconstruct the source line to make sure the regex matches well
-                    reconstructed_line =
-                        m["other_pre"] *
-                        "\"" *
-                        m["string_pre"] *
-                        m["folder"] *
-                        "/" *
-                        m["subfolder"] *
-                        "/day" *
-                        day_string *
-                        "_input.txt\"" *
-                        m["other_post"] *
-                        "\n"
+                    #! format: off
+                    reconstructed_line = m["other_pre"] * "\"" * m["string_pre"] * m["folder"] * "/" * m["subfolder"] * "/day" * day_string * "_input.txt\"" * m["other_post"] * "\n"
+                    #! format: on
                     @assert line == reconstructed_line "line was not reconstructed correctly by the script parser"
                 end
-                source[i] =
-                    m["other_pre"] *
-                    "\"" *
-                    m["string_pre"] *
-                    m["folder"] *
-                    "/" *
-                    subfolder *
-                    "/day" *
-                    day_string *
-                    "_input.txt\"" *
-                    m["other_post"] *
-                    "\n"
+                #! format: off
+                source[i] = m["other_pre"] * "\"" * m["string_pre"] * m["folder"] * "/" * subfolder * "/day" * day_string * "_input.txt\"" * m["other_post"] * "\n"
+                #! format: on
             end
         end
     end
@@ -105,7 +87,7 @@ function eval_source(source, f)
     end
 end
 
-answers = Matrix{Int64}(undef, 0, 4)
+answers = []
 for f in readdir(root)
     m = match(r"(?>\.\/)?day(?'day'\d{2})_(?'part'[1|2])\.jl", f)
     if (m !== nothing)
@@ -115,30 +97,42 @@ for f in readdir(root)
             return readlines(io, keep = true)
             # return read
         end
+        # day == 13 || continue
         comment_prints!(source)
         global_answer!(source, f)
         begin_end!(source)
 
         println("--- $f ---")
-        println(" test data ...")
         switch_data_source!(source, day_string, "test")
-        answer_test = eval_source(source, f)
+        print(" test data ... ")
+        t = @elapsed begin
+            answer_test = eval_source(source, f)
+        end
+        printstyled("$t s\n"; color = :light_black)
 
-        # println("running $f with reduced data")
-        # switch_data_source!(source, day_string, "reduced")
-        # answer_reduced = eval_source(source, f)
-
-        println(" full data ...")
         switch_data_source!(source, day_string, "full")
-        answer_full = eval_source(source, f)
+        print(" full data ... ")
+        t = @elapsed begin
+            answer_full = eval_source(source, f)
+        end
+        printstyled("$t s\n"; color = :light_black)
 
-        println("")
-        row = [day, part, answer_test, answer_full]
-        global answers = vcat(answers, row')
+        print("\n")
+        push!(answers, (day, part, answer_test, answer_full))
     end
 end
 
-## TODO: print markdown table
-for row in eachrow(answers)
-    println(row)
+WIDTH = 13 # 'test' and 'full' collumns width
+DAY, BAR1 = "day.part", "--------"
+TEST, FULL = rpad("test",WIDTH,' '), rpad("full",WIDTH,' ')
+BAR2 = '-'^WIDTH
+# print markdown table
+println("| $DAY | $TEST | $FULL |")
+println("| $BAR1 | $BAR2 | $BAR2 |")
+for (day, part, answer_test, answer_full) in answers
+    day = lpad(day,2,"0")
+    part = rpad(part,5,' ')
+    answer_test = rpad(answer_test, WIDTH, ' ')
+    answer_full = rpad(answer_full, WIDTH, ' ')
+    println("| $day.$part | $answer_test | $answer_full |")
 end

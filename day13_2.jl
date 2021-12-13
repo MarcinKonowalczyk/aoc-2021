@@ -32,32 +32,26 @@ end
 
 for (fold, crease) in folds
 
-    if fold == 'x'
-        @assert sum(paper[:,crease]) == 0 "Crease not at all-zeros!"
-        left = paper[:,1:(crease-1)]
-        right = paper[:,end:-1:(crease+1)]
-        if size(left, 2) == size(right, 2)
-
-        elseif size(left, 2) < size(right, 2)
-            right = right[:,end-size(left,2)+1:end]
-        elseif size(left, 2) > size(right, 2)
-            left = left[:,end-size(right,2)+1:end]
-        end
-        @assert size(left) == size(right) "left and right bit matrices should have equal sizes now"
-        global paper = left .| right
-    else # fold == 'y'
+    if fold == 'y'
         @assert sum(paper[crease,:]) == 0 "Crease not at all-zeros!"
-        top = paper[1:(crease-1),:]
-        bottom = paper[end:-1:(crease+1),:]
-        if size(top, 1) == size(bottom, 1)
-
-        elseif size(top, 2) < size(bottom, 2)
-            bottom = bottom[end-size(top,2)+1:end,:]
+        top, bottom = paper[1:(crease-1),:], paper[end:-1:(crease+1),:]
+        if size(top, 2) < size(bottom, 2)
+            bottom = bottom[end-size(top, 2)+1:end,:]
         elseif size(top, 2) > size(bottom, 2)
-            top = top[end-size(bottom,2)+1:end,:]
+            top = top[end-size(bottom, 2)+1:end,:]
         end
         @assert size(top) == size(bottom) "top and bottom bit matrices should have equal sizes now"
         global paper = top .| bottom
+    else
+        @assert sum(paper[:,crease]) == 0 "Crease not at all-zeros!"
+        left, right = paper[:,1:(crease-1)], paper[:,end:-1:(crease+1)]
+        if size(left, 1) < size(right, 1)
+            right = right[:,end-size(left, 1)+1:end]
+        elseif size(left, 1) > size(right, 1)
+            left = left[:,end-size(right,1)+1:end]
+        end
+        @assert size(left) == size(right) "left and right bit matrices should have equal sizes now"
+        global paper = left .| right
     end
 
 end

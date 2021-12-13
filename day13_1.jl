@@ -52,9 +52,9 @@ else # fold == 'y'
     bottom = paper[end:-1:(crease+1),:]
     if size(top, 1) == size(bottom, 1)
 
-    elseif size(top, 2) < size(bottom, 2)
+    elseif size(top, 1) < size(bottom, 1)
         bottom = bottom[end-size(top,2)+1:end,:]
-    elseif size(top, 2) > size(bottom, 2)
+    elseif size(top, 1) > size(bottom, 1)
         top = top[end-size(bottom,2)+1:end,:]
     end
     @assert size(top) == size(bottom) "top and bottom bit matrices should have equal sizes now"

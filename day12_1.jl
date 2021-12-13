@@ -20,7 +20,7 @@ filter(f) = Base.Fix1(filter, f)
 const Cave = String
 
 # build the cave system
-const caves = Dict{Cave,Set{Cave}}([])
+caves = Dict{Cave,Set{Cave}}([])
 for (cave1, cave2) in eachrow(connections)
     (cave1 in keys(caves)) || (caves[cave1] = Set{Cave}([]))
     (cave2 in keys(caves)) || (caves[cave2] = Set{Cave}([]))

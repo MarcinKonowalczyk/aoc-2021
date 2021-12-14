@@ -102,22 +102,20 @@ for f in readdir(root)
         global_answer!(source, f)
         begin_end!(source)
 
-        println("--- $f ---")
+        printstyled("--- $f ---\n"; bold=true)
         switch_data_source!(source, day_string, "test")
-        print(" test data ... ")
+        print(" test ... ")
         t = @elapsed begin
             answer_test = eval_source(source, f)
         end
         printstyled("$t s\n"; color = :light_black)
 
         switch_data_source!(source, day_string, "full")
-        print(" full data ... ")
+        print(" full ... ")
         t = @elapsed begin
             answer_full = eval_source(source, f)
         end
         printstyled("$t s\n"; color = :light_black)
-
-        print("\n")
         push!(answers, (day, part, answer_test, answer_full))
     end
 end

@@ -72,4 +72,4 @@ minmax_difference = max_element.second - min_element.second
 
 @show minmax_difference
 
-# answer = minmax_difference
+answer = minmax_difference

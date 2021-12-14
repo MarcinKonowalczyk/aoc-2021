@@ -48,21 +48,6 @@ for epoch in 1:40
         end
     end
     global pair_counter = new_counter
-
-    epoch_string = lpad(epoch, 3, "0")
-    N_string = lpad(sum(values(pair_counter)), 6, "0")
-    print("After step $epoch_string ($N_string) : ")
-    if epoch < 10
-        printed_so_far = 0
-        for (key, value) in pair_counter
-            if value > 0 && printed_so_far < 15
-                value_string = rpad(value,3," ")
-                print("$key-$value_string ")
-                printed_so_far += 1
-            end
-        end
-    end
-    print(" ... \n")
 end
 
 tally = Dict{Char, Int}()

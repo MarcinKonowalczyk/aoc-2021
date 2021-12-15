@@ -85,7 +85,7 @@ elif [ "$EXTENSION" = "jelly" ]; then
 elif [ "$EXTENSION" = "jq" ]; then
     # Find comment lines with '# data = ' and '# flags = ' specofying the data file and flags to use
     DATA_FILE=$(cat "$FILENAME" | sed -nr '/^# *data *=[^=] *[^ ].*/p' | sed -r "s/# *data *=[^=] *\.?\/?//g; s/^/${ROOT//\//\\/}\//")
-    JQ_FLAGS=$(cat "$FILENAME" | sed -nr '/^# *flags *=[^=] *[^ ].*/p' | sed -r 's/# *flags *=[^=] *\.?\/?//g')
-    # echo "DATA_FILE = $DATA_FILE"; echo "JQ_FLAGS  = $JQ_FLAGS";
-    cat "$DATA_FILE" | jq "$JQ_FLAGS" --from-file "$FILENAME"
+    JQ_FLAGS=($(cat "$FILENAME" | sed -nr '/^# *flags *=[^=] *[^ ].*/p' | sed -r 's/# *flags *=[^=] *\.?\/?//g'))
+    echo "DATA_FILE = $DATA_FILE"; echo "JQ_FLAGS  = ${JQ_FLAGS[@]}";
+    cat "$DATA_FILE" | jq "${JQ_FLAGS[@]}" --from-file "$FILENAME"
 fi

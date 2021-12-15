@@ -8,3 +8,4 @@
 [., .[1:]] | transpose | .[:-1] # pairwise input
 | map( .[0] - .[1] ) # 1st difference
 | map( select( . < 0 ) | 1 ) | add # sum
+| { answer:. } # for nicer output

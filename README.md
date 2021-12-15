@@ -27,13 +27,27 @@ find . -regex '.*\.java$' | xargs -L1 google-java-format -i
 javac $FILENAME.java && java $FILENAME && rm $FILENAME.class
 ```
 
-## Jelly
+## jQ
 
+```bash
+cat "$DATA_FILE" | jq "$JQ_FLAGS" --from-file "$FILENAME"
+```
+
+where `$DATA_FILE` is the name of the input data file, either entered manually or specified in the comment somewhere towards the top of the `$FILENAME.jq`, on a like starting with `# data = ...`. Similarly, `$JQ_FLAGS` are flags to be passed to `jq` command. Both these can be extracted from the `.jq` file with `cat` and a bit of `sed` magic:
+
+```bash
+DATA_FILE=$(cat "$FILENAME" | sed -nr '/^# *data *=[^=] *[^ ].*/p' | sed -r 's/# *data *=[^=] *\.?\/?//g')
+JQ_FLAGS=$(cat "$FILENAME" | sed -nr '/^# *flags *=[^=] *[^ ].*/p' | sed -r 's/# *flags *=[^=] *\.?\/?//g')
+```
+
+This is how it works in [the run script](./.vscode/run.sh).
+
+<!-- ## Jelly
 
 ```bash
 cat "$DATA" | jelly fu "$FILENAME"
 cat "$FILENAME" | head -n1 | sed -r 's/(“\.?\/?|»)//g' | sed "s/^/${ROOT//\//\\/}\//" | xargs cat | jelly fu "$FILENAME"
-```
+``` -->
 
 ## Answers
 

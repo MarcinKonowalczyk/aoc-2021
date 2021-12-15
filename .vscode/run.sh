@@ -62,7 +62,13 @@ elif [ "$EXTENSION" = "java" ]; then
     javac "$FILE" $JAVAC_ARGS && java "${FILENAME%.*}" && rm "${FILENAME%.*}.class"
 elif [ "$EXTENSION" = "jelly" ]; then
     # cat "$FILENAME" | head -n1 | sed -r 's/(“\.?\/?|»)//g' | sed "s/^/${ROOT//\//\\/}\//" | xargs cat | jelly fu "$FILENAME"
-    DATA=$(cat "$FILENAME" | head -n1 | sed -r 's/(“\.?\/?|»)//g' | sed "s/^/${ROOT//\//\\/}\//") # get data filename fron the file ( firt line of teh input)
+    DATA=$(cat "$FILENAME" | head -n1 | sed -r 's/(“\.?\/?|»)//g' | sed "s/^/${ROOT//\//\\/}\//") # get data filename from the file ( firt line of teh input)
     LINES=$(cat $DATA | wc -l); LINES=$((LINES+1)); # get lines count of the data file
     cat "$DATA" | jelly fu "$FILENAME" "$LINES" # pass the content of the file as stdin and the number of lines as argv3 to the jelly script
+elif [ "$EXTENSION" = "jq" ]; then
+    DATA=$(cat "$FILENAME" | sed -nr '/^# *data *=[^=] *[^ ].*/p' | sed -r "s/# *data *=[^=] *\.?\/?//g; s/^/${ROOT//\//\\/}\//")
+    JQ_FLAGS=$(cat "$FILENAME" | sed -nr '/^# *flags *=[^=] *[^ ].*/p' | sed -r 's/# *flags *=[^=] *\.?\/?//g')
+    echo "DATA = $DATA"
+    echo "JQ_FLAGS = $JQ_FLAGS"
+    cat "$DATA" | jq "$JQ_FLAGS" --from-file "$FILENAME"
 fi

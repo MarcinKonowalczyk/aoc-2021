@@ -1,5 +1,8 @@
-# https://gist.github.com/MarcinKonowalczyk/709e93f08e9d72f8092acd5b8d34c81f
-# Example .run.sh
+# https://github.com/MarcinKonowalczyk/run_sh
+# Bash script run by a keboard shortcut, called with rteh current file path $1
+# This is intended as an exmaple, but also contains a bunch of useful path partitions
+# Feel free to delete everything in here and make it do wahtever you want.
+
 echo "Hello from run script! ^_^"
 
 # The direcotry of the main project from which this script is running
@@ -22,14 +25,30 @@ ROOTFOLDER="${1##*$ROOT/}" && ROOTFOLDER="${ROOTFOLDER%%/*}" # folder in the roo
 # Echo of path variables
 # VERBOSE=true
 VERBOSE=false
-
-if [ "$FILEFOLDER" = ".vscode" ] && [ "$FILENAME" = "run.sh" ]; then
-    VERBOSE=true
-fi
+[ "$FILEFOLDER" = ".vscode" ] && [ "$FILENAME" = "run.sh" ] && VERBOSE=true
 
 if $VERBOSE; then
     # https://stackoverflow.com/a/5947802/2531987
     GREEN='\033[0;32m'; YELLOW='\033[0;33m'; RED='\033[0;31m'; NC='\033[0m'
+
+    LOGO=true
+    if $LOGO; then
+        PURPLE='\033[0;34m'; DARKGRAY='\033[1;30m';
+        TEXT=(
+            " ______   __  __   __   __ " "    " "    ______   __  __   "
+            "/\\  == \\ /\\ \\/\\ \\ /\\ \"-.\\ \\ " "    " "  /\\  ___\\ /\\ \\_\\ \\  "
+            "\\ \\  __< \\ \\ \\_\\ \\\\\\ \\ \\-.  \\ " "  __" " \\ \\___  \\\\\\ \\  __ \\ "
+            " \\ \\_\\ \\_\\\\\\ \\_____\\\\\\ \\_\\\\\\\"\\_\\ " "/\\_\\\\" " \\/\\_____\\\\\\ \\_\\ \\_\\\\"
+            "  \\/_/ /_/ \\/_____/ \\/_/ \\/_/ " "\\/_/" "  \\/_____/ \\/_/\\/_/"
+        )
+        echo -e "$PURPLE${TEXT[0]}$DARKGRAY${TEXT[1]}$PURPLE${TEXT[2]}$NC"
+        echo -e "$PURPLE${TEXT[3]}$DARKGRAY${TEXT[4]}$PURPLE${TEXT[5]}$NC"
+        echo -e "$PURPLE${TEXT[6]}$DARKGRAY${TEXT[7]}$PURPLE${TEXT[8]}$NC"
+        echo -e "$PURPLE${TEXT[9]}$DARKGRAY${TEXT[10]}$PURPLE${TEXT[11]}$NC"
+        echo -e "$PURPLE${TEXT[12]}$DARKGRAY${TEXT[13]}$PURPLE${TEXT[14]}$NC"
+        echo -e ""
+    fi
+
     echo -e "ROOT       : $GREEN${ROOT}$NC  # root directory of the project"
     echo -e "NAME       : $GREEN${NAME}$NC  # project name"
     echo -e "PWD        : $GREEN${PWD}$NC  # pwd"
@@ -51,8 +70,6 @@ fi
 
 ##################################################
 
-# echo "s/^/\/Volumes\/Extended\/GitLab\/aoc-2021/"
-
 if [ "$EXTENSION" = "jl" ]; then
     julia "$FILE"
 elif [ "$EXTENSION" = "js" ]; then
@@ -66,9 +83,9 @@ elif [ "$EXTENSION" = "jelly" ]; then
     LINES=$(cat $DATA | wc -l); LINES=$((LINES+1)); # get lines count of the data file
     cat "$DATA" | jelly fu "$FILENAME" "$LINES" # pass the content of the file as stdin and the number of lines as argv3 to the jelly script
 elif [ "$EXTENSION" = "jq" ]; then
-    DATA=$(cat "$FILENAME" | sed -nr '/^# *data *=[^=] *[^ ].*/p' | sed -r "s/# *data *=[^=] *\.?\/?//g; s/^/${ROOT//\//\\/}\//")
+    # Find comment lines with '# data = ' and '# flags = ' specofying the data file and flags to use
+    DATA_FILE=$(cat "$FILENAME" | sed -nr '/^# *data *=[^=] *[^ ].*/p' | sed -r "s/# *data *=[^=] *\.?\/?//g; s/^/${ROOT//\//\\/}\//")
     JQ_FLAGS=$(cat "$FILENAME" | sed -nr '/^# *flags *=[^=] *[^ ].*/p' | sed -r 's/# *flags *=[^=] *\.?\/?//g')
-    echo "DATA = $DATA"
-    echo "JQ_FLAGS = $JQ_FLAGS"
-    cat "$DATA" | jq "$JQ_FLAGS" --from-file "$FILENAME"
+    # echo "DATA_FILE = $DATA_FILE"; echo "JQ_FLAGS  = $JQ_FLAGS";
+    cat "$DATA_FILE" | jq "$JQ_FLAGS" --from-file "$FILENAME"
 fi

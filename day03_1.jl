@@ -17,10 +17,12 @@ col_zeros = sum(.~B, dims = 1)
 gamma_bits = col_ones .> col_zeros
 epsilon_bits = .!gamma_bits
 
-bits_to_int(bits) = sum(((i, x),) -> x << (i - 1), enumerate(reverse(bits)))
+bits2int = Base.Fix1(sum, ((i, x),) -> x << (i - 1)) ∘ enumerate ∘ reverse
 
-gamma = bits_to_int(gamma_bits)
-epsilon = bits_to_int(epsilon_bits)
+@show gamma_bits
+@show epsilon_bits
+gamma = bits2int(gamma_bits)
+epsilon = bits2int(epsilon_bits)
 power_consumption = gamma * epsilon
 
 @show gamma, epsilon

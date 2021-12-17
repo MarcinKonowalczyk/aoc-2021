@@ -10,16 +10,16 @@ Include with:
 """
 module FixPatches
 
-    export dmap
+export dmap
 
-    import Base.map, Base.reduce, Base.filter
-    map(f::Function) = Base.Fix1(map, f)
-    filter(f::Function) = Base.Fix1(filter, f)
-    reduce(f::Function) = Base.Fix1(reduce, f)
+import Base.map, Base.reduce, Base.filter
+map(f::Function) = Base.Fix1(map, f)
+filter(f::Function) = Base.Fix1(filter, f)
+reduce(f::Function) = Base.Fix1(reduce, f)
 
-    import Base.parse, Base.split
-    parse(t) = Base.Fix1(parse, t)
+import Base.parse, Base.split
+parse(t) = Base.Fix1(parse, t)
 
-    dmap(d::Dict) = Base.Fix1(map, x -> d[x])
+dmap(d::Dict) = Base.Fix1(map, x -> d[x])
 
 end

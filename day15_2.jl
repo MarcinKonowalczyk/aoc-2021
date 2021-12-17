@@ -1,7 +1,7 @@
 using DelimitedFiles
 
-data_file = "./data/test/day15_input.txt"
-# data_file = "./data/full/day15_input.txt"
+# data_file = "./data/test/day15_input.txt"
+data_file = "./data/full/day15_input.txt"
 data = readdlm(data_file, '\n', String)
 
 N, M = (size(data, 1), length(data[1]))
@@ -45,7 +45,8 @@ begin
     local epoch = 0
     while !isempty(visit_queue)
         current_node = first(heappop!(visit_queue, comp_fun))
-        !visited_map[current_node] || continue
+        current_node == CartesianIndex(N,M) && break
+        visited_map[current_node] && continue
         visited_map[current_node] = true
 
         for neighbour in (current_node + x for x in neighbours)

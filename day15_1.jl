@@ -17,11 +17,13 @@ visited_map = falses((N, M))
 
 neighbours = (CartesianIndex(-1, 0), CartesianIndex(1, 0), CartesianIndex(0, -1), CartesianIndex(0, 1))
 
+using DataStructures
+
 begin
-    local visit_queue = Vector{CartesianIndex{2}}([CartesianIndex(1,1)])
+    local visit_queue = PriorityQueue{CartesianIndex{2}, Int}(CartesianIndex(1,1)=>0)
     local epoch = 0
     while !isempty(visit_queue)
-        current_node = pop!(visit_queue)
+        current_node = dequeue!(visit_queue)
         !visited_map[current_node] || continue
         visited_map[current_node] = true
 
@@ -30,7 +32,7 @@ begin
             cost_of_neighbour = cost_map[current_node] + chitons[neighbour]
             if cost_of_neighbour < cost_map[neighbour]
                 cost_map[neighbour] = cost_of_neighbour
-                pushfirst!(visit_queue, neighbour)
+                enqueue!(visit_queue, neighbour, cost_of_neighbour)
             end
         end
 

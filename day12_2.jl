@@ -11,11 +11,8 @@ import Base.-, Base.+
 @inline -(s1::AbstractSet{T}, s2::AbstractSet{T}) where {T} = setdiff(s1, s2)
 @inline -(s1::AbstractSet{T}, s2::T) where {T} = setdiff(s1, Set{T}([s2]))
 
-# Patch map, reduce and filter with Fix1 for piping
-import Base.map, Base.reduce, Base.filter
-map(f) = Base.Fix1(map, f)
-reduce(f) = Base.Fix1(reduce, f)
-filter(f) = Base.Fix1(filter, f)
+(local d = pwd()) in LOAD_PATH || push!(LOAD_PATH, d)
+using FixPatches
 
 const Cave = String
 

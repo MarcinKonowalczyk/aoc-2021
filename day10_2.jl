@@ -4,7 +4,7 @@ data_file = "./data/test/day10_input.txt"
 # data_file = "./data/full/day10_input.txt"
 lines = readdlm(data_file, ' ', String)
 
-(d = pwd()) in LOAD_PATH || push!(LOAD_PATH, d)
+(local d = pwd()) in LOAD_PATH || push!(LOAD_PATH, d)
 using Heap
 
 bracket_maping = Dict{Char,Char}('(' => ')', '[' => ']', '{' => '}', '<' => '>')

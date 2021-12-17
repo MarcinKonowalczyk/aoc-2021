@@ -32,11 +32,8 @@ wiring_map = Dict{String,Int}(
     "abcdfg" => 9,
 )
 
-import Base.map, Base.reduce, Base.filter
-map(f) = Base.Fix1(map, f)
-map(d::Dict) = Base.Fix1(map, x -> d[x])
-reduce(f) = Base.Fix1(reduce, f)
-filter(f) = Base.Fix1(filter, f)
+(local d = pwd()) in LOAD_PATH || push!(LOAD_PATH, d)
+using FixPatches
 
 # Sort string
 stringsort = join ∘ sort ∘ collect
@@ -82,7 +79,7 @@ for (row_index, (input, output)) in enumerate(zip(eachrow(inputs), eachrow(outpu
     )
 
     translated_outputs[row_index] =
-        output |> map(stringsort ∘ map(decode_map)) |> map(wiring_map) |> digitise
+        output |> map(stringsort ∘ dmap(decode_map)) |> dmap(wiring_map) |> digitise
 end
 
 sum_of_outputs = sum(translated_outputs)

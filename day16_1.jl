@@ -4,12 +4,8 @@ data_file = "./data/test/day16_input.txt"
 # data_file = "./data/full/day16_input.txt"
 data = readdlm(data_file, '\n', String)[:]
 
-# Patch map, reduce and filter with Fix1 for piping and composition
-import Base.map, Base.reduce, Base.filter, Base.parse
-map(f) = Base.Fix1(map, f)
-parse(t) = Base.Fix1(parse, t)
-# reduce(f) = Base.Fix1(reduce, f)
-# filter(f) = Base.Fix1(filter, f)
+(local d = pwd()) in LOAD_PATH || push!(LOAD_PATH, d)
+using FixPatches
 
 hex2bits = BitVector ∘ map(parse(Bool)) ∘ collect ∘ join ∘ map(bitstring) ∘ hex2bytes
 bits2int = Base.Fix1(sum, ((i, x),) -> x << (i - 1)) ∘ enumerate ∘ reverse

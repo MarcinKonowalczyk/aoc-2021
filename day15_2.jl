@@ -36,7 +36,7 @@ neighbours = (
     CartesianIndex(0, 1),
 )
 
-(d = pwd()) in LOAD_PATH || push!(LOAD_PATH, d)
+(local d = pwd()) in LOAD_PATH || push!(LOAD_PATH, d)
 using Heap
 
 begin

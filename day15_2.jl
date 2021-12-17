@@ -12,29 +12,34 @@ for j = 1:N, k = 1:M
 end
 
 # expand the cave map
-actual_chitons = zeros(Int, (5*N, 5*M))
-for j in 0:4, k in 0:4
-    new_chitons = mod.(chitons .+ (j+k-1), 9) .+ 1
+actual_chitons = zeros(Int, (5 * N, 5 * M))
+for j = 0:4, k = 0:4
+    new_chitons = mod.(chitons .+ (j + k - 1), 9) .+ 1
     actual_chitons[(1:N).+(j*N), (1:M).+(k*M)] = new_chitons
 end
 
 chitons = actual_chitons
-N, M = 5*N, 5*M
+N, M = 5 * N, 5 * M
 
 # Run Dijkstra's
 # Thanks to https://github.com/goggle/AdventOfCode2021.jl/blob/master/src/day15.jl
 # for a final hint on what's wrong with my implementation
 
 cost_map = fill(typemax(Int), (N, M))
-cost_map[CartesianIndex(1,1)] = 0
+cost_map[CartesianIndex(1, 1)] = 0
 visited_map = falses((N, M))
 
-neighbours = (CartesianIndex(-1, 0), CartesianIndex(1, 0), CartesianIndex(0, -1), CartesianIndex(0, 1))
+neighbours = (
+    CartesianIndex(-1, 0),
+    CartesianIndex(1, 0),
+    CartesianIndex(0, -1),
+    CartesianIndex(0, 1),
+)
 
 using DataStructures
 
 begin
-    local visit_queue = PriorityQueue{CartesianIndex{2}, Int}(CartesianIndex(1,1)=>0)
+    local visit_queue = PriorityQueue{CartesianIndex{2},Int}(CartesianIndex(1, 1) => 0)
     local epoch = 0
     while !isempty(visit_queue)
         current_node = dequeue!(visit_queue)
@@ -51,8 +56,8 @@ begin
         end
 
         epoch += 1
-        if mod(epoch,100) == 0
-            done = round(sum(visited_map)/(N*M)*100; digits=1)
+        if mod(epoch, 100) == 0
+            done = round(sum(visited_map) / (N * M) * 100; digits = 1)
             println("$done % done")
 
             # for row in eachrow(visited_map)
@@ -67,6 +72,6 @@ begin
     end
 end
 
-min_cost = cost_map[end,end]
+min_cost = cost_map[end, end]
 @show min_cost
 answer = min_cost

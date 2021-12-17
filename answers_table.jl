@@ -102,7 +102,7 @@ for f in readdir(root)
         global_answer!(source, f)
         begin_end!(source)
 
-        printstyled("--- $f ---\n"; bold=true)
+        printstyled("--- $f ---\n"; bold = true)
         switch_data_source!(source, day_string, "test")
         print(" test ... ")
         t = @elapsed begin
@@ -122,14 +122,14 @@ end
 
 WIDTH = 13 # 'test' and 'full' collumns width
 DAY, BAR1 = "day.part", "--------"
-TEST, FULL = rpad("test",WIDTH,' '), rpad("full",WIDTH,' ')
+TEST, FULL = rpad("test", WIDTH, ' '), rpad("full", WIDTH, ' ')
 BAR2 = '-'^WIDTH
 # print markdown table
 println("| $DAY | $TEST | $FULL |")
 println("| $BAR1 | $BAR2 | $BAR2 |")
 for (day, part, answer_test, answer_full) in answers
-    day = lpad(day,2,"0")
-    part = rpad(part,5,' ')
+    day = lpad(day, 2, "0")
+    part = rpad(part, 5, ' ')
     answer_test = rpad(answer_test, WIDTH, ' ')
     answer_full = rpad(answer_full, WIDTH, ' ')
     println("| $day.$part | $answer_test | $answer_full |")

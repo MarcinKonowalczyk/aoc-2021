@@ -4,12 +4,12 @@ using DelimitedFiles
 data_file = "./data/full/day14_input.txt"
 data = readdlm(data_file, ' ', String)
 
-sequence = data[1,1]
-insertion_rules = data[2:end,[1,3]]
-insertion_rules = Dict(x[1]=>x[2][1] for x in eachrow(insertion_rules))
+sequence = data[1, 1]
+insertion_rules = data[2:end, [1, 3]]
+insertion_rules = Dict(x[1] => x[2][1] for x in eachrow(insertion_rules))
 
 import Base.+
-+(s1::Set{Char}, s2::Set{Char}) = union(s1,s2)
++(s1::Set{Char}, s2::Set{Char}) = union(s1, s2)
 +(s1::Set{Char}, s2::Char) = union(s1, Set{Char}(s2))
 +(s1::Set{Char}, s2::String) = union(s1, Set{Char}(s2))
 
@@ -17,22 +17,23 @@ N_template = lpad(length(sequence), 6, "0")
 println("Template       ($N_template) : $sequence")
 
 # Find all unique elements in both the sequence and the insertion rules
-unique_elements = reduce(insertion_rules; init = Set{Char}(sequence)=>nothing) do x, y
-    return (x.first + y.first + y.second)=>nothing
-end.first
+unique_elements =
+    reduce(insertion_rules; init = Set{Char}(sequence) => nothing) do x, y
+        return (x.first + y.first + y.second) => nothing
+    end.first
 
 @show unique_elements
 
-pair_counter = Dict{String, Int}()
-empty_counter = Dict{String, Int}()
+pair_counter = Dict{String,Int}()
+empty_counter = Dict{String,Int}()
 for (x, y) in Base.Iterators.product(unique_elements, unique_elements)
-    pair_counter[x*y] = length(findall(x*y, sequence; overlap=true))
+    pair_counter[x*y] = length(findall(x * y, sequence; overlap = true))
     empty_counter[x*y] = 0
 end
-@assert sum(values(pair_counter)) == length(sequence)-1 "Invalud number of counted pairs"
+@assert sum(values(pair_counter)) == length(sequence) - 1 "Invalud number of counted pairs"
 
 
-for epoch in 1:40
+for epoch = 1:40
     new_counter = copy(empty_counter)
     for (pair, count) in pair_counter
         if count > 0
@@ -50,7 +51,7 @@ for epoch in 1:40
     global pair_counter = new_counter
 end
 
-tally = Dict{Char, Int}()
+tally = Dict{Char,Int}()
 for (pair, count) in pair_counter
     element = pair[1] # tally by forst element of each pair to avoid double counting
     element in keys(tally) || (tally[element] = 0)
@@ -62,8 +63,8 @@ tally[sequence[end]] += 1
 
 @show tally
 
-max_element = reduce((x,y)->(x.second > y.second) ? x : y, tally)
-min_element = reduce((x,y)->(x.second < y.second) ? x : y, tally)
+max_element = reduce((x, y) -> (x.second > y.second) ? x : y, tally)
+min_element = reduce((x, y) -> (x.second < y.second) ? x : y, tally)
 
 @show max_element
 @show min_element

@@ -13,17 +13,22 @@ end
 
 # Run Dijkstra's shortest paths algorithm
 cost_map = fill(typemax(Int), (N, M))
-cost_map[CartesianIndex(1,1)] = 0
+cost_map[CartesianIndex(1, 1)] = 0
 visited_map = falses((N, M))
 
-neighbours = (CartesianIndex(-1, 0), CartesianIndex(1, 0), CartesianIndex(0, -1), CartesianIndex(0, 1))
+neighbours = (
+    CartesianIndex(-1, 0),
+    CartesianIndex(1, 0),
+    CartesianIndex(0, -1),
+    CartesianIndex(0, 1),
+)
 
 # TODO: Implement one's own priority queue
 #       Maybe reuse the minheap...?
 using DataStructures
 
 begin
-    local visit_queue = PriorityQueue{CartesianIndex{2}, Int}(CartesianIndex(1,1)=>0)
+    local visit_queue = PriorityQueue{CartesianIndex{2},Int}(CartesianIndex(1, 1) => 0)
     local epoch = 0
     while !isempty(visit_queue)
         current_node = dequeue!(visit_queue)
@@ -40,8 +45,8 @@ begin
         end
 
         epoch += 1
-        if mod(epoch,100) == 0
-            done = round(sum(visited_map)/(N*M)*100; digits=1)
+        if mod(epoch, 100) == 0
+            done = round(sum(visited_map) / (N * M) * 100; digits = 1)
             println("$done % done")
 
             # for row in eachrow(visited_map)
@@ -57,6 +62,6 @@ begin
 end
 
 
-min_cost = cost_map[end,end]
+min_cost = cost_map[end, end]
 @show min_cost
 answer = min_cost

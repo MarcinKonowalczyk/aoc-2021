@@ -97,7 +97,7 @@ for f in readdir(root)
             return readlines(io, keep = true)
             # return read
         end
-        # day == 13 || continue
+        # day == 16 || continue
         comment_prints!(source)
         global_answer!(source, f)
         begin_end!(source)
@@ -120,17 +120,18 @@ for f in readdir(root)
     end
 end
 
-WIDTH = 13 # 'test' and 'full' collumns width
-DAY, BAR1 = "day.part", "--------"
-TEST, FULL = rpad("test", WIDTH, ' '), rpad("full", WIDTH, ' ')
-BAR2 = '-'^WIDTH
+TEST_WIDTH = 58 # 'test' and 'full' collumns width
+FULL_WIDTH = 20
+DAY_TEXT, DAY_BAR = "day.part", "--------"
+TEST_TEXT, FULL_TEXT = rpad("test", TEST_WIDTH, ' '), rpad("full", FULL_WIDTH, ' ')
+TEST_BAR, FULL_BAR = '-'^TEST_WIDTH, '-'^FULL_WIDTH
 # print markdown table
-println("| $DAY | $TEST | $FULL |")
-println("| $BAR1 | $BAR2 | $BAR2 |")
+println("| $DAY_TEXT | $TEST_TEXT | $FULL_TEXT |")
+println("| $DAY_BAR | $TEST_BAR | $FULL_BAR |")
 for (day, part, answer_test, answer_full) in answers
     day = lpad(day, 2, "0")
     part = rpad(part, 5, ' ')
-    answer_test = rpad(answer_test, WIDTH, ' ')
-    answer_full = rpad(answer_full, WIDTH, ' ')
+    answer_test = rpad(answer_test, TEST_WIDTH, ' ')
+    answer_full = rpad(answer_full, FULL_WIDTH, ' ')
     println("| $day.$part | $answer_test | $answer_full |")
 end

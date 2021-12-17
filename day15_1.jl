@@ -11,12 +11,15 @@ for j = 1:N, k = 1:M
     chitons[j, k] = parse(Int, data[j][k])
 end
 
+# Run Dijkstra's shortest paths algorithm
 cost_map = fill(typemax(Int), (N, M))
 cost_map[CartesianIndex(1,1)] = 0
 visited_map = falses((N, M))
 
 neighbours = (CartesianIndex(-1, 0), CartesianIndex(1, 0), CartesianIndex(0, -1), CartesianIndex(0, 1))
 
+# TODO: Implement one's own priority queue
+#       Maybe reuse the minheap...?
 using DataStructures
 
 begin

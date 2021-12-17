@@ -11,16 +11,19 @@ for j = 1:N, k = 1:M
     chitons[j, k] = parse(Int, data[j][k])
 end
 
+# expand the cave map
 actual_chitons = zeros(Int, (5*N, 5*M))
-for j in 0:4
-    for k in 0:4
-        new_chitons = mod.(chitons .+ (j+k-1), 9) .+ 1
-        actual_chitons[(1:N).+(j*N), (1:M).+(k*M)] = new_chitons
-    end
+for j in 0:4, k in 0:4
+    new_chitons = mod.(chitons .+ (j+k-1), 9) .+ 1
+    actual_chitons[(1:N).+(j*N), (1:M).+(k*M)] = new_chitons
 end
 
 chitons = actual_chitons
 N, M = 5*N, 5*M
+
+# Run Dijkstra's
+# Thanks to https://github.com/goggle/AdventOfCode2021.jl/blob/master/src/day15.jl
+# for a final hint on what's wrong with my implementation
 
 cost_map = fill(typemax(Int), (N, M))
 cost_map[CartesianIndex(1,1)] = 0
@@ -64,7 +67,6 @@ begin
     end
 end
 
-# < 2926
 min_cost = cost_map[end,end]
 @show min_cost
 answer = min_cost

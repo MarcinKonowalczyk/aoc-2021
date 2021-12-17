@@ -16,13 +16,13 @@ The pointer is the only hign which gets modified.
 """
 function read_n_bits(bits::BitVector, pointer::Int, n::Int)
     len = length(bits)
-    @assert (pointer+n-1) <= len "$pointer + $n larger than the length of the bits array! ($len)"
+    @assert (pointer + n - 1) <= len "$pointer + $n larger than the length of the bits array! ($len)"
     bits = bits[pointer:(pointer+n-1)]
     pointer += n
     return bits, pointer
 end
 
-function parse_packet(bits::BitVector, pointer::Int=1)::Tuple{Tuple{Int, Int, Any}, Int}
+function parse_packet(bits::BitVector, pointer::Int = 1)::Tuple{Tuple{Int,Int,Any},Int}
     version, pointer = read_n_bits(bits, pointer, 3)
     version = bits2int(version)
     typeid, pointer = read_n_bits(bits, pointer, 3)
@@ -43,7 +43,7 @@ end
 """
 Parse a literal packet out of the bit stream
 """
-function parse_literal_packet(bits::BitVector, pointer::Int)::Tuple{Int, Int}
+function parse_literal_packet(bits::BitVector, pointer::Int)::Tuple{Int,Int}
     value = BitVector([])
     indicator_bit = true
     while indicator_bit
@@ -58,14 +58,14 @@ end
 """
 Parse an operator packet out of the bit stream
 """
-function parse_operator_packet(bits::BitVector, pointer::Int)::Tuple{Vector, Int}
+function parse_operator_packet(bits::BitVector, pointer::Int)::Tuple{Vector,Int}
     lengthid, pointer = read_n_bits(bits, pointer, 1)
     lengthid = lengthid[1]
-    
+
     subvalues = []::Vector
     length, pointer = read_n_bits(bits, pointer, lengthid ? 11 : 15)
     length = bits2int(length)
-    
+
     length_tally = 0
     while length_tally < length
         value, new_pointer = parse_packet(bits, pointer)
@@ -73,7 +73,7 @@ function parse_operator_packet(bits::BitVector, pointer::Int)::Tuple{Vector, Int
         length_tally += lengthid ? 1 : new_pointer - pointer
         pointer = new_pointer
     end
-    
+
     return subvalues, pointer
 end
 

@@ -16,7 +16,7 @@ The pointer is the only hign which gets modified.
 """
 function read_n_bits(bits::BitVector, pointer::Int, n::Int)
     len = length(bits)
-    @assert (pointer+n-1) <= len "$pointer + $n larger than the length of the bits array! ($len)"
+    @assert (pointer + n - 1) <= len "$pointer + $n larger than the length of the bits array! ($len)"
     bits = bits[pointer:(pointer+n-1)]
     pointer += n
     return bits, pointer
@@ -69,14 +69,14 @@ function parse_operator_packet(bits::BitVector, pointer::Int)
     typeid, pointer = read_n_bits(bits, pointer, 3)
     typeid = bits2int(typeid)
     @assert typeid != 4 "typeid ($typeid) == 4. This is a literal packet, not an operator."
-    
+
     lengthid, pointer = read_n_bits(bits, pointer, 1)
     lengthid = lengthid[1]
     subvalues = []
     if !lengthid
         length, pointer = read_n_bits(bits, pointer, 15)
         length = bits2int(length)
-        
+
         bits_read = 0
         while bits_read < length
             value, new_pointer = parse_packet(bits, pointer)
@@ -95,7 +95,7 @@ function parse_operator_packet(bits::BitVector, pointer::Int)
             push!(subvalues, value)
         end
     end
-    
+
     return (version, typeid, subvalues), pointer
 end
 

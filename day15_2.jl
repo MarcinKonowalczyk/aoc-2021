@@ -45,7 +45,7 @@ begin
     local epoch = 0
     while !isempty(visit_queue)
         current_node = first(heappop!(visit_queue, comp_fun))
-        current_node == CartesianIndex(N,M) && break
+        current_node == CartesianIndex(N, M) && break
         visited_map[current_node] && continue
         visited_map[current_node] = true
 

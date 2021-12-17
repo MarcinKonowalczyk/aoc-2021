@@ -12,10 +12,12 @@ module FixPatches
 
     export dmap
 
-    import Base.map, Base.reduce, Base.filter, Base.parse
-    map(f) = Base.Fix1(map, f)
-    reduce(f) = Base.Fix1(reduce, f)
-    filter(f) = Base.Fix1(filter, f)
+    import Base.map, Base.reduce, Base.filter
+    map(f::Function) = Base.Fix1(map, f)
+    filter(f::Function) = Base.Fix1(filter, f)
+    reduce(f::Function) = Base.Fix1(reduce, f)
+
+    import Base.parse, Base.split
     parse(t) = Base.Fix1(parse, t)
 
     dmap(d::Dict) = Base.Fix1(map, x -> d[x])

@@ -8,36 +8,39 @@ data = readdlm(data_file, ' ', String)
 using FixPatches
 using Heap
 
-proc = map(parse(Int)) ∘ (x->split(x,"..")) ∘ (x->x[3:end]) ∘ (x->split(x,",")[1])
+proc = map(parse(Int)) ∘ (x -> split(x, "..")) ∘ (x -> x[3:end]) ∘ (x -> split(x, ",")[1])
 x, y = proc(data[3]), proc(data[4])
 y = reverse(y)
 
 inbox(p) = (p[1] >= x[1]) && (p[1] <= x[2]) && (p[2] <= y[1]) && (p[2] >= y[2])
 
-function test_shot(v::Tuple; show_trajectory::Bool=false)
+function test_shot(v::Tuple; show_trajectory::Bool = false)
     position = [0, 0]
     velocity = [v[1], v[2]]
 
     trajectory = [Tuple(position)]
     while true
         # @show position, velocity
-        
+
         hit = inbox(position)
         miss = position[1] > x[2] || position[2] < y[2]
 
         if show_trajectory
-            all_points = union(trajectory, [(x[1],y[1]), (x[2],y[2])])
-            x_range = all_points |> reduce((x,y)->(min(x[1], y[1]),max(x[1], y[1])))
-            y_range = all_points |> reduce((x,y)->(min(x[2], y[2]),max(x[2], y[2]))) |> reverse
-            for y in y_range[1]:-1:y_range[2]
-                for x in x_range[1]:x_range[2]
-                    if (x,y) in trajectory
+            all_points = union(trajectory, [(x[1], y[1]), (x[2], y[2])])
+            x_range = all_points |> reduce((x, y) -> (min(x[1], y[1]), max(x[1], y[1])))
+            y_range =
+                all_points |>
+                reduce((x, y) -> (min(x[2], y[2]), max(x[2], y[2]))) |>
+                reverse
+            for y = y_range[1]:-1:y_range[2]
+                for x = x_range[1]:x_range[2]
+                    if (x, y) in trajectory
                         printstyled("#"; color = :blue, bold = true)
                     elseif inbox([x, y])
                         color = hit ? :green : miss ? :red : :yellow
                         printstyled("T"; color = color)
                     else
-                        printstyled("."; color = :light_black )
+                        printstyled("."; color = :light_black)
                     end
                 end
                 print("\n")
@@ -72,8 +75,9 @@ candidates = []
 for vx = 1:100, vy = 1:100
     hit, trajectory = test_shot((vx, vy))
     if hit
-        max_height = trajectory |> reduce((x,y)->(nothing, max(x[2],y[2]))) |> last
-        heappush!(candidates, -max_height=>(vx,vy))
+        local max_height =
+            trajectory |> reduce((x, y) -> (nothing, max(x[2], y[2]))) |> last
+        heappush!(candidates, -max_height => (vx, vy))
     end
 end
 

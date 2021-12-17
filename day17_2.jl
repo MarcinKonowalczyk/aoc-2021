@@ -7,7 +7,7 @@ data = readdlm(data_file, ' ', String)
 (local d = pwd()) in LOAD_PATH || push!(LOAD_PATH, d)
 using FixPatches, Heap
 
-proc = map(parse(Int)) ∘ (x->split(x,"..")) ∘ (x->x[3:end]) ∘ (x->split(x,",")[1])
+proc = map(parse(Int)) ∘ (x -> split(x, "..")) ∘ (x -> x[3:end]) ∘ (x -> split(x, ",")[1])
 x, y = proc(data[3]), proc(data[4])
 y = reverse(y)
 @show x, y
@@ -32,8 +32,9 @@ candidates = Vector{Pair{Int,Tuple{Int,Int}}}()
 for vx = 1:maximum(x), vy = minimum(y):(-minimum(y))
     hit, trajectory = test_shot((vx, vy))
     if hit
-        max_height = trajectory |> reduce((x,y)->(nothing, max(x[2],y[2]))) |> last
-        heappush!(candidates, -max_height=>(vx,vy))
+        local max_height =
+            trajectory |> reduce((x, y) -> (nothing, max(x[2], y[2]))) |> last
+        heappush!(candidates, -max_height => (vx, vy))
     end
 end
 

@@ -23,15 +23,15 @@ neighbours = (
     CartesianIndex(0, 1),
 )
 
-# TODO: Implement one's own priority queue
-#       Maybe reuse the minheap...?
-using DataStructures
+(d = pwd()) in LOAD_PATH || push!(LOAD_PATH, d)
+using Heap
 
 begin
-    local visit_queue = PriorityQueue{CartesianIndex{2},Int}(CartesianIndex(1, 1) => 0)
+    local visit_queue = Vector{Pair{CartesianIndex{2},Int}}([CartesianIndex(1, 1) => 0])
+    local comp_fun(x, y) = x.second < y.second
     local epoch = 0
     while !isempty(visit_queue)
-        current_node = dequeue!(visit_queue)
+        current_node = first(heappop!(visit_queue, comp_fun))
         !visited_map[current_node] || continue
         visited_map[current_node] = true
 
@@ -40,7 +40,7 @@ begin
             cost_of_neighbour = cost_map[current_node] + chitons[neighbour]
             if cost_of_neighbour < cost_map[neighbour]
                 cost_map[neighbour] = cost_of_neighbour
-                enqueue!(visit_queue, neighbour, cost_of_neighbour)
+                heappush!(visit_queue, neighbour => cost_of_neighbour, comp_fun)
             end
         end
 

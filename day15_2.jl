@@ -1,7 +1,7 @@
 using DelimitedFiles
 
-# data_file = "./data/test/day15_input.txt"
-data_file = "./data/full/day15_input.txt"
+data_file = "./data/test/day15_input.txt"
+# data_file = "./data/full/day15_input.txt"
 data = readdlm(data_file, '\n', String)
 
 N, M = (size(data, 1), length(data[1]))
@@ -36,13 +36,15 @@ neighbours = (
     CartesianIndex(0, 1),
 )
 
-using DataStructures
+(d = pwd()) in LOAD_PATH || push!(LOAD_PATH, d)
+using Heap
 
 begin
-    local visit_queue = PriorityQueue{CartesianIndex{2},Int}(CartesianIndex(1, 1) => 0)
+    local visit_queue = Vector{Pair{CartesianIndex{2},Int}}([CartesianIndex(1, 1) => 0])
+    local comp_fun(x, y) = x.second < y.second
     local epoch = 0
     while !isempty(visit_queue)
-        current_node = dequeue!(visit_queue)
+        current_node = first(heappop!(visit_queue, comp_fun))
         !visited_map[current_node] || continue
         visited_map[current_node] = true
 
@@ -51,12 +53,12 @@ begin
             cost_of_neighbour = cost_map[current_node] + chitons[neighbour]
             if cost_of_neighbour < cost_map[neighbour]
                 cost_map[neighbour] = cost_of_neighbour
-                enqueue!(visit_queue, neighbour, cost_of_neighbour)
+                heappush!(visit_queue, neighbour => cost_of_neighbour, comp_fun)
             end
         end
 
         epoch += 1
-        if mod(epoch, 100) == 0
+        if mod(epoch, 1000) == 0
             done = round(sum(visited_map) / (N * M) * 100; digits = 1)
             println("$done % done")
 

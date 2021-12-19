@@ -103,19 +103,23 @@ for sequence in sequences
     length(sequence) > 1 || continue
     @show sequence
 
-    max_m = 0
-    N = length(sequence)*length(sequence)
-    for (pri, (s1, s2)) in enumerate(Iterators.product(sequence, sequence))
-        println("--- test $pri / $N ---")
+    max_mag = 0
+    N = length(sequence)*(length(sequence)-1)
+    counter = 0
+    for (s1, s2) in Iterators.product(sequence, sequence)
+        s1 != s2 || continue
+        counter += 1
+        percent_done = lpad(round(counter / N * 100; digits=1),6," ")
+        print("$percent_done% | ")
         mag = (s1, s2) |> reduce(reduce) |> magnitude
-        if mag > max_m
-            println("new magnituve $mag found > $max_m")
-            max_m = mag
+        if mag > max_mag
+            printstyled("$max_mag < $mag\n"; color = :green, bold = true)
+            max_mag = mag
         else
-            println("$mag < $max_m")
+            printstyled("$mag < $max_mag\n"; color = :yellow)
         end
     end
-    push!(magnitudes, max_m)
+    push!(magnitudes, max_mag)
 end
 
 answer = length(magnitudes) == 1 ? magnitudes[1] : magnitudes

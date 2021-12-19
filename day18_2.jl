@@ -2,9 +2,9 @@ using DelimitedFiles
 
 # data_file = "./data/test/day18_input.txt"
 data_file = "./data/full/day18_input.txt"
-data = readdlm(data_file, '\n', String; skipblanks=false)[:]
+data = readdlm(data_file, '\n', String; skipblanks = false)[:]
 
-data = [line for line in data if !startswith(line,"#")] # skip commented lines
+data = [line for line in data if !startswith(line, "#")] # skip commented lines
 
 begin
     sequences = Vector{Vector{String}}([[]])
@@ -35,9 +35,14 @@ import Base.+, Base.~, Base.*
 
 pairify(x) = x isa Vector ? pairify(first(x)) => pairify(last(x)) : x
 
-sequences = sequences |> map(map(eval ∘ Meta.parse)) |> map(map(pairify)) |> Vector{Vector{Pair}}
+sequences =
+    sequences |> map(map(eval ∘ Meta.parse)) |> map(map(pairify)) |> Vector{Vector{Pair}}
 
-function reduce_step(@nospecialize(pair::Pair), depth::Int=0, @nospecialize(context=nothing=>nothing))
+function reduce_step(
+    @nospecialize(pair::Pair),
+    depth::Int = 0,
+    @nospecialize(context = nothing => nothing)
+)
     # depth <= 4 || error("This should not happen")
     changed = false
     if depth == 4
@@ -46,22 +51,26 @@ function reduce_step(@nospecialize(pair::Pair), depth::Int=0, @nospecialize(cont
         changed = true
     else
         # old_first, old_second = pair
-        new_first, new_context, changed = reduce_step(pair.first, depth+1, context~pair)
+        new_first, new_context, changed = reduce_step(pair.first, depth + 1, context ~ pair)
         if changed
-            pair = new_first=>new_context.second
-            context = new_context.first=>context.second
+            pair = new_first => new_context.second
+            context = new_context.first => context.second
         else
-            new_second, new_context, changed = reduce_step(pair.second, depth+1, pair~context)
+            new_second, new_context, changed =
+                reduce_step(pair.second, depth + 1, pair ~ context)
             if changed
-                pair = new_context.first=>new_second
-                context = context.first=>new_context.second
+                pair = new_context.first => new_second
+                context = context.first => new_context.second
             end
         end
     end
     return pair, context, changed
 end
 
-reduce_step(number::Int, depth::Int=0, context=nothing=>nothing) = (temp = (number < 10 || depth >= 0)) ? number : fld(number,2)=>cld(number,2), context, !temp
+reduce_step(number::Int, depth::Int = 0, context = nothing => nothing) =
+    (temp = (number < 10 || depth >= 0)) ? number : fld(number, 2) => cld(number, 2),
+    context,
+    !temp
 
 # i know i should call this funciton something else, but lol -M
 import Base.reduce
@@ -87,12 +96,12 @@ function reduce(@nospecialize number::Pair)
     return number
 end
 
-reduce(p1::Pair, p2::Pair) = reduce(p1=>p2)
+reduce(p1::Pair, p2::Pair) = reduce(p1 => p2)
 
 flatten(pair::Pair) = (flatten(pair.first)..., flatten(pair.second)...)
 flatten(number::Int) = number
 
-magnitude(pair::Pair) = 3*magnitude(pair.first) + 2*magnitude(pair.second)
+magnitude(pair::Pair) = 3 * magnitude(pair.first) + 2 * magnitude(pair.second)
 magnitude(number::Int) = number
 
 # TODO: is it the case that product of large magnitude numbers is also large??
@@ -104,12 +113,12 @@ for sequence in sequences
     @show sequence
 
     max_mag = 0
-    N = length(sequence)*(length(sequence)-1)
+    N = length(sequence) * (length(sequence) - 1)
     counter = 0
     for (s1, s2) in Iterators.product(sequence, sequence)
         s1 != s2 || continue
         counter += 1
-        percent_done = lpad(round(counter / N * 100; digits=1),6," ")
+        percent_done = lpad(round(counter / N * 100; digits = 1), 6, " ")
         print("$percent_done% | ")
         mag = (s1, s2) |> reduce(reduce) |> magnitude
         if mag > max_mag
